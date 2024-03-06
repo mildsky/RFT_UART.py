@@ -13,7 +13,7 @@ Python implementation for RFT series, Robotus 6-axis Force/Torque Sensor
 Main class for communicate with RFT series sensor.
 Class initialization will automatically start reading response daemon thread.
 You can access data received by `getResponse(resonseID)` method.
-For example, `getResponse(1)` will return the latest response of read model name command.
+For example, `getResponse(ID_READ_MODEL_NAME)` will return the latest response of read model name command.
 
 ## RFT_UART_command.py
 
