@@ -24,14 +24,14 @@ def commandSetBaudrate(baudrate: int):
     else:
         print("baudrate not supported. Supported baudrates are 115200, 921600, 460800, 230400, 115200, 57600")
         raise ValueError('Invalid baudrate')
-def commandSetFilter(type, parameter: int):
+def commandSetFilter(type: int, parameter: int):
     if (type != 0) and (type != 1):
         print("Invalid type. Supported types are 0 and 1")
         raise ValueError('Invalid type')
     if parameter < 0 or parameter > 14:
         print("Invalid parameter. Supported parameters are 0 to 14")
         raise ValueError('Invalid parameter')
-    return b'\08' + int.to_bytes(type) + int.to_bytes(parameter) + b'\00\00\00\00\00'
+    return b'\10' + int.to_bytes(type) + int.to_bytes(parameter) + b'\00\00\00\00\00'
 def commandSetDataOutputRate(hz: int):
     paramDict = { 200: 0, 10: 1, 20: 2,
                   50: 3, 100: 4, 200: 5,
@@ -40,6 +40,6 @@ def commandSetDataOutputRate(hz: int):
     if parameter == None:
         print("Invalid hz. Supported hz are 200, 10, 20, 50, 100, 200, 333, 500, 1000")
         raise ValueError('Invalid hz')
-    return b'\0F' + int.to_bytes(parameter) + b'\00\00\00\00\00\00'
+    return b'\17' + int.to_bytes(parameter) + b'\00\00\00\00\00\00'
 def commandSetBias(bias: bool):
-    return b'\11' + (b'\01' if bias else b'\00') + b'\00\00\00\00\00\00'
+    return b'\21' + (b'\01' if bias else b'\00') + b'\00\00\00\00\00\00'
