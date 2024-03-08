@@ -8,6 +8,7 @@ class RFTseries:
     __response = dict()
     DT = 50
     DF = 1000
+    offsetFx, offsetFy, offsetFz, offsetTx, offsetTy, offsetTz = 0, 0, 0, 0, 0, 0
     def __init__(self, port, baud=115200):
         # default 115200 bps
         # 1 stop bit, No parity, No flow control, 8 data bits
@@ -16,6 +17,8 @@ class RFTseries:
         self.__thread = threading.Thread(target=self.readResponseRunner)
         self.__thread.daemon = True
         self.__thread.start()
+    def close(self):
+        self.ser.close()
     ## Command Packet Structure
     # SOP : 0x55
     # Data Field  : 8 bytes
@@ -43,26 +46,10 @@ class RFTseries:
                     self.__response[responseID] = data
     def getResponse(self, responseID):
         return self.__response.get(responseID)
-
-PORT = "/dev/tty.usbserial-DB00G423"
-
-if __name__ == "__main__":
-    rft = RFTseries(PORT)
-    rft.sendCommand(COMMAND_STOP_FT_DATA_OUTPUT)
-    time.sleep(1)
-    rft.ser.flush()
-    rft.sendCommand(COMMNAD_READ_MODEL_NAME)
-    time.sleep(1)
-    print(responseReadModelName(rft.getResponse(ID_READ_MODEL_NAME)))
-    rft.sendCommand(COMMAND_READ_SERIAL_NUMBER)
-    time.sleep(1)
-    print(responseReadSerialNUmber(rft.getResponse(ID_READ_SERIAL_NUMBER)))
-    rft.sendCommand(COMMAND_READ_BAUDRATE)
-    time.sleep(1)
-    print(responseReadBaudrate(rft.getResponse(ID_READ_BAUDRATE)))
-    rft.sendCommand(COMMAND_START_FT_DATA_OUTPUT)
-    time.sleep(1)
-    rft.sendCommand(commandSetBias(1))
-    for i in range(5000):
-        print(responseReadFTData(rft.getResponse(ID_START_FT_DATA_OUTPUT)))
-        time.sleep(1/200)
+    def hardTare(self):
+        self.sendCommand(commandSetBias(True))
+    def softTare(self):
+        self.offsetFx, self.offsetFy, self.offsetFz, self.offsetTx, self.offsetTy, self.offsetTz, _ = responseReadFTData(self.getResponse(ID_START_FT_DATA_OUTPUT))
+    def getTareFT(self):
+        rawFx, rawFy, rawFz, rawTx, rawTy, rawTz, _ = responseReadFTData(self.getResponse(ID_START_FT_DATA_OUTPUT))
+        return rawFx - self.offsetFx, rawFy - self.offsetFy, rawFz - self.offsetFz, rawTx - self.offsetTx, rawTy - self.offsetTy, rawTz - self.offsetTz
