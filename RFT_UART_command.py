@@ -8,7 +8,7 @@ COMMAND_START_FT_DATA_OUTPUT            = bytes.fromhex('0B 00 00 00 00 00 00 00
 COMMAND_STOP_FT_DATA_OUTPUT             = bytes.fromhex('0C 00 00 00 00 00 00 00')
 COMMAND_READ_DATA_OUTPUT_RATE           = bytes.fromhex('10 00 00 00 00 00 00 00')
 COMMAND_READ_COUNT_OVERLOAD_OCCURRENCE  = bytes.fromhex('12 00 00 00 00 00 00 00')
-def commandSetBaudrate(baudrate):
+def commandSetBaudrate(baudrate: int):
     if baudrate == 115200:
         return bytes.fromhex('06 00 00 00 00 00 00 00')
     elif baudrate == 921600:
@@ -24,7 +24,7 @@ def commandSetBaudrate(baudrate):
     else:
         print("baudrate not supported. Supported baudrates are 115200, 921600, 460800, 230400, 115200, 57600")
         raise ValueError('Invalid baudrate')
-def commandSetFilter(type, parameter):
+def commandSetFilter(type, parameter: int):
     if (type != 0) and (type != 1):
         print("Invalid type. Supported types are 0 and 1")
         raise ValueError('Invalid type')
@@ -32,7 +32,7 @@ def commandSetFilter(type, parameter):
         print("Invalid parameter. Supported parameters are 0 to 14")
         raise ValueError('Invalid parameter')
     return b'\08' + int.to_bytes(type) + int.to_bytes(parameter) + b'\00\00\00\00\00'
-def commandSetDataOutputRate(hz):
+def commandSetDataOutputRate(hz: int):
     paramDict = { 200: 0, 10: 1, 20: 2,
                   50: 3, 100: 4, 200: 5,
                   333: 6, 500: 7, 1000: 8 }
@@ -41,8 +41,5 @@ def commandSetDataOutputRate(hz):
         print("Invalid hz. Supported hz are 200, 10, 20, 50, 100, 200, 333, 500, 1000")
         raise ValueError('Invalid hz')
     return b'\0F' + int.to_bytes(parameter) + b'\00\00\00\00\00\00'
-def commandSetBias(bias):
-    if bias != 0 and bias != 1:
-        print("Invalid bias. Supported bias are 0 and 1")
-        raise ValueError('Invalid bias')
-    return b'\11' + int.to_bytes(bias) + b'\00\00\00\00\00\00'
+def commandSetBias(bias: bool):
+    return b'\11' + (b'\01' if bias else b'\00') + b'\00\00\00\00\00\00'
