@@ -14,7 +14,7 @@ class RFTseries:
         # 1 stop bit, No parity, No flow control, 8 data bits
         self.ser = serial.Serial(port, baud)
         self.ser.flush()
-        self.__thread = threading.Thread(target=self.readResponseRunner)
+        self.__thread = threading.Thread(target=self.__readResponseRunner)
         self.__thread.daemon = True
         self.__thread.start()
     def close(self):
@@ -35,7 +35,7 @@ class RFTseries:
     # Data Field  : 16 bytes
     # Checksum : 1 byte
     # EOP : 0xAA
-    def readResponseRunner(self):
+    def __readResponseRunner(self):
         while True:
             if self.ser.in_waiting:
                 if self.ser.read() == b'\x55':
