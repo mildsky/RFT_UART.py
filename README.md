@@ -15,6 +15,15 @@ Class initialization will automatically start reading response daemon thread.
 You can access data received by `getResponse(resonseID)` method.
 For example, `getResponse(ID_READ_MODEL_NAME)` will return the latest response of read model name command.
 
+all methods
+
+- sendCommand(command)
+- getResponse(responseID)
+- hardTare()
+- softTare()
+- getTareFT()
+- close()
+
 ## RFT_UART_command.py
 
 This file contains all the command for RFT series sensor.
