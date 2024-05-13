@@ -1,6 +1,6 @@
-# RFT_UART
+# pyRFT
 
-Python implementation for RFT series, Robotus 6-axis Force/Torque Sensor
+Python interface for RFT series, Robotus 6-axis Force/Torque Sensor, over UART using pyserial
 
 ## prerequisite
 
